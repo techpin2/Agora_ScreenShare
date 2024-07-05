@@ -311,6 +311,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             RtcEngine.InitEventHandler(null);
             RtcEngine.LeaveChannel();
             RtcEngine.Dispose();
+            micToggle.onValueChanged.RemoveListener(OnToggleValueChangeed);  //Pin2
         }
 
         internal string GetChannelName()
@@ -409,7 +410,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
 
         #region Added By Pin2
 
-        private static VideoSurface MakeImageSurface()  //Pin2
+        private static VideoSurface MakeImageSurface()
         {
             // configure videoSurface
             var videoSurface = FindAnyObjectByType<VideoSurface>();
@@ -509,7 +510,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
                 string.Format("OnJoinChannelSuccess channelName: {0}, uid: {1}, elapsed: {2}",
                                 connection.channelId, connection.localUid, elapsed));
 
-            ScreenShare.Instance.StopPublishAudio();
+            ScreenShare.Instance.StopPublishAudio();  //Pin2
         }
 
         public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
