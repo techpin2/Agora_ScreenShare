@@ -21,7 +21,7 @@ public class ScreenItem : MonoBehaviour
 
     public virtual void OnClickScreenItem()
     {
-        ScrenShare_Child screnShare_Child= FindAnyObjectByType<ScrenShare_Child>();
+        ScreenShare_Child screnShare_Child= FindAnyObjectByType<ScreenShare_Child>();
         screnShare_Child.OnStartShareBtnClicked(windowId);
     }
 
@@ -29,7 +29,7 @@ public class ScreenItem : MonoBehaviour
     {
         string[] name = windowName.Split('|');
         this.windowName.text = name[0];
-        this.windowId= name[1];
+        this.windowId= name[name.Length-1];
     }
     public void UpdateScreenItemThumbnail(Texture texture)
     {
