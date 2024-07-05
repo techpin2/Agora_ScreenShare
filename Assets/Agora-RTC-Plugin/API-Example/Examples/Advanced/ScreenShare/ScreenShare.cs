@@ -3,14 +3,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Agora.Rtc;
- 
 using UnityEngine.Serialization;
- 
 
 namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
 {
     public class ScreenShare : MonoBehaviour
     {
+        public static ScreenShare Instance;
+
         [FormerlySerializedAs("appIdInput")]
         [SerializeField]
         private AppIdInput _appIdInput;
@@ -48,13 +48,19 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
         [Header("AddOn")]
         [SerializeField] Button joinButton;
         [SerializeField] Button leaveButton;
+        [SerializeField] Toggle micToggle;
 
         protected Rect _originThumRect = new Rect(0,0,500,260);
         private Rect _originIconRect = new Rect(0,0,289,280);
 
+        private void Awake()
+        {
+            Instance= this;
+        }
         // Use this for initialization
         private void Start()
         {
+            micToggle.onValueChanged.AddListener(OnToggleValueChangeed);     //Pin2
             LoadAssetData();
             if (CheckAppId())
             {
@@ -435,6 +441,35 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             }
         }
 
+        public void StopPublishAudio()
+        {
+            micToggle.isOn = true;
+            var options = new ChannelMediaOptions();
+            options.publishMicrophoneTrack.SetValue(false);
+            var nRet = RtcEngine.UpdateChannelMediaOptions(options);
+            this.Log.UpdateLog("UpdateChannelMediaOptions: " + nRet);
+        }
+
+        public void StartPublishAudio()
+        {
+            var options = new ChannelMediaOptions();
+            options.publishMicrophoneTrack.SetValue(true);
+            var nRet = RtcEngine.UpdateChannelMediaOptions(options);
+            this.Log.UpdateLog("UpdateChannelMediaOptions: " + nRet);
+        }
+
+        private void OnToggleValueChangeed(bool isOn)
+        {
+            if(isOn)
+            {
+                StopPublishAudio();
+            }
+            else
+            {
+                StartPublishAudio();
+            }
+        }
+
         #endregion
 
         internal static void DestroyVideoView(uint uid)
@@ -446,7 +481,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             }
         }
 
-#endregion
+        #endregion
     }
 
 #region -- Agora Event ---
@@ -473,6 +508,8 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             _desktopScreenShare.Log.UpdateLog(
                 string.Format("OnJoinChannelSuccess channelName: {0}, uid: {1}, elapsed: {2}",
                                 connection.channelId, connection.localUid, elapsed));
+
+            ScreenShare.Instance.StopPublishAudio();
         }
 
         public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
