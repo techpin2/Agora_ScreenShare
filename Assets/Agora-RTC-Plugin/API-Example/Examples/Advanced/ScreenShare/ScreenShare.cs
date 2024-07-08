@@ -3,14 +3,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Agora.Rtc;
+ 
 using UnityEngine.Serialization;
+ 
 
 namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
 {
     public class ScreenShare : MonoBehaviour
     {
-        public static ScreenShare Instance;
-
         [FormerlySerializedAs("appIdInput")]
         [SerializeField]
         private AppIdInput _appIdInput;
@@ -31,7 +31,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
         public Text LogText;
         internal Logger Log;
         internal IRtcEngine RtcEngine = null;
-        protected ScreenCaptureSourceInfo[] _screenCaptureSourceInfos;
+        private ScreenCaptureSourceInfo[] _screenCaptureSourceInfos;
 
         public Dropdown WinIdSelect;
         public Button GetSourceBtn;
@@ -45,22 +45,12 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
         public RawImage IconImage;
         public RawImage ThumbImage;
 
-        [Header("AddOn")]
-        [SerializeField] Button joinButton;
-        [SerializeField] Button leaveButton;
-        [SerializeField] Toggle micToggle;
-
-        protected Rect _originThumRect = new Rect(0,0,500,260);
+        private Rect _originThumRect = new Rect(0,0,500,260);
         private Rect _originIconRect = new Rect(0,0,289,280);
 
-        private void Awake()
-        {
-            Instance= this;
-        }
         // Use this for initialization
         private void Start()
         {
-            micToggle.onValueChanged.AddListener(OnToggleValueChangeed);     //Pin2
             LoadAssetData();
             if (CheckAppId())
             {
@@ -118,14 +108,12 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
 
         public void JoinChannel()
         {
-            UpdateJoinLeaveButtons(true);
             var ret = RtcEngine.JoinChannel(_token, _channelName);
             Debug.Log("JoinChannel returns: " + ret);
         }
 
         public void LeaveChannel()
         {
-            UpdateJoinLeaveButtons(false);
             RtcEngine.LeaveChannel();
         }
 
@@ -142,9 +130,8 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             var ret = RtcEngine.UpdateChannelMediaOptions(options);
             Debug.Log("UpdateChannelMediaOptions returns: " + ret);
 
-            UpdatePublishUnPublishButtons(false);    //Pin2
-            //PublishBtn.gameObject.SetActive(false);
-            //UnpublishBtn.gameObject.SetActive(true);
+            PublishBtn.gameObject.SetActive(false);
+            UnpublishBtn.gameObject.SetActive(true);
         }
 
         public void OnUnplishButtonClick()
@@ -160,12 +147,11 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             var ret = RtcEngine.UpdateChannelMediaOptions(options);
             Debug.Log("UpdateChannelMediaOptions returns: " + ret);
 
-            UpdatePublishUnPublishButtons(true);   //Pin2
-            //PublishBtn.gameObject.SetActive(true);
-            //UnpublishBtn.gameObject.SetActive(false);
+            PublishBtn.gameObject.SetActive(true);
+            UnpublishBtn.gameObject.SetActive(false);
         }
 
-        public virtual void PrepareScreenCapture()
+        public void PrepareScreenCapture()
         {
             if (WinIdSelect == null || RtcEngine == null) return;
 
@@ -185,9 +171,10 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
                 .ToList());
         }
 
-        public virtual void OnStartShareBtnClick()
+        public void OnStartShareBtnClick()
         {
             if (RtcEngine == null) return;
+
             if (StartShareBtn != null) StartShareBtn.gameObject.SetActive(false);
             if (StopShareBtn != null) StopShareBtn.gameObject.SetActive(true);
 
@@ -221,9 +208,9 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             }
 
 #endif
-            UpdatePublishUnPublishButtons(true);  //Pin2
-            //PublishBtn.gameObject.SetActive(true);
-            //UnpublishBtn.gameObject.SetActive(true);
+
+            PublishBtn.gameObject.SetActive(true);
+            UnpublishBtn.gameObject.SetActive(true);
             //OnPublishButtonClick();
             ScreenShare.MakeVideoView(0, "", VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN);
 
@@ -234,9 +221,9 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             if (StartShareBtn != null) StartShareBtn.gameObject.SetActive(true);
             if (StopShareBtn != null) StopShareBtn.gameObject.SetActive(false);
 
-            UpdatePublishUnPublishButtons(false);  //Pin2
-            //PublishBtn.gameObject.SetActive(false);
-            //UnpublishBtn.gameObject.SetActive(false);
+
+            PublishBtn.gameObject.SetActive(false);
+            UnpublishBtn.gameObject.SetActive(false);
 
             DestroyVideoView(0);
             RtcEngine.StopScreenCapture();
@@ -254,7 +241,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             this.Log.UpdateLog("UpdateScreenCapture: " + nRet);
         }
 
-        public virtual void OnShowThumbButtonClick()
+        public void OnShowThumbButtonClick()
         {
             if (ThumbImage.texture)
             {
@@ -311,7 +298,6 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             RtcEngine.InitEventHandler(null);
             RtcEngine.LeaveChannel();
             RtcEngine.Dispose();
-            micToggle.onValueChanged.RemoveListener(OnToggleValueChangeed);  //Pin2
         }
 
         internal string GetChannelName()
@@ -330,19 +316,18 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             }
 
             // create a GameObject and assign to this new user
-            //var videoSurface = MakeImageSurface(uid.ToString());  //Pin2
-            var videoSurface = MakeImageSurface();
+            var videoSurface = MakeImageSurface(uid.ToString());
             if (ReferenceEquals(videoSurface, null)) return;
             // configure videoSurface
             videoSurface.SetForUser(uid, channelId, videoSourceType);
             videoSurface.SetEnable(true);
 
-            //videoSurface.OnTextureSizeModify += (int width, int height) =>                   //Pin2
-            //{
-            //    float scale = (float)height / (float)width;
-            //    videoSurface.transform.localScale = new Vector3(-5, 5 * scale, 1);
-            //    Debug.Log("OnTextureSizeModify: " + width + "  " + height);
-            //};
+            videoSurface.OnTextureSizeModify += (int width, int height) =>
+            {
+                float scale = (float)height / (float)width;
+                videoSurface.transform.localScale = new Vector3(-5, 5 * scale, 1);
+                Debug.Log("OnTextureSizeModify: " + width + "  " + height);
+            };
         }
 
         // VIDEO TYPE 1: 3D Object
@@ -372,7 +357,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             return videoSurface;
         }
 
-        //Video TYPE 2: RawImage
+        // Video TYPE 2: RawImage
         private static VideoSurface MakeImageSurface(string goName)
         {
             var go = new GameObject();
@@ -408,71 +393,6 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             return videoSurface;
         }
 
-        #region Added By Pin2
-
-        private static VideoSurface MakeImageSurface()
-        {
-            // configure videoSurface
-            var videoSurface = FindAnyObjectByType<VideoSurface>();
-            return videoSurface;
-        }
-
-        private void UpdateJoinLeaveButtons(bool enable)
-        {
-            if (joinButton != null && leaveButton != null)
-            {
-                joinButton.gameObject.SetActive(!enable);
-                leaveButton.gameObject.SetActive(enable);
-            }
-        }
-        public void UpdatePublishUnPublishButtons(bool enable)
-        {
-            if (PublishBtn != null && UnpublishBtn != null)
-            {
-                PublishBtn.gameObject.SetActive(enable);
-                UnpublishBtn.gameObject.SetActive(!enable);
-            }
-        }
-        public void UpdateStartStopShareButtons(bool enable)
-        {
-            if (StartShareBtn != null && StopShareBtn != null)
-            {
-                StartShareBtn.gameObject.SetActive(enable);
-                StopShareBtn.gameObject.SetActive(!enable);
-            }
-        }
-
-        public void StopPublishAudio()
-        {
-            micToggle.isOn = true;
-            var options = new ChannelMediaOptions();
-            options.publishMicrophoneTrack.SetValue(false);
-            var nRet = RtcEngine.UpdateChannelMediaOptions(options);
-            this.Log.UpdateLog("UpdateChannelMediaOptions: " + nRet);
-        }
-
-        public void StartPublishAudio()
-        {
-            var options = new ChannelMediaOptions();
-            options.publishMicrophoneTrack.SetValue(true);
-            var nRet = RtcEngine.UpdateChannelMediaOptions(options);
-            this.Log.UpdateLog("UpdateChannelMediaOptions: " + nRet);
-        }
-
-        private void OnToggleValueChangeed(bool isOn)
-        {
-            if(isOn)
-            {
-                StopPublishAudio();
-            }
-            else
-            {
-                StartPublishAudio();
-            }
-        }
-
-        #endregion
-
         internal static void DestroyVideoView(uint uid)
         {
             var go = GameObject.Find(uid.ToString());
@@ -482,7 +402,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             }
         }
 
-        #endregion
+#endregion
     }
 
 #region -- Agora Event ---
@@ -509,8 +429,6 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             _desktopScreenShare.Log.UpdateLog(
                 string.Format("OnJoinChannelSuccess channelName: {0}, uid: {1}, elapsed: {2}",
                                 connection.channelId, connection.localUid, elapsed));
-
-            ScreenShare.Instance.StopPublishAudio();  //Pin2
         }
 
         public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
