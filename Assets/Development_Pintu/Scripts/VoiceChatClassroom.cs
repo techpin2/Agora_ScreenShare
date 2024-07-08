@@ -37,6 +37,7 @@ public class VoiceChatClassroom : MonoBehaviour
     private void OnChannelJoin()
     {
         micToggle.gameObject.SetActive(true);
+        StopPublishAudio();
     }
 
     private void OnChannelLeave()
