@@ -4,14 +4,15 @@ using TMPro;
 
 public class ScreenItem : MonoBehaviour
 {
+    public static ScreenItem currentlySelectedScreenItem;
+
     [SerializeField] private RawImage screenImage;
     [SerializeField] private TMP_Text windowName;
     [SerializeField] private GameObject outer;
     private Button button;
     private string windowId;
 
-    private static ScreenItem currentlySelectedScreenItem;
-
+    #region Monobehaviour Methods
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -23,20 +24,23 @@ public class ScreenItem : MonoBehaviour
         button.onClick.RemoveListener(OnClickScreenItem);
     }
 
-    public virtual void OnClickScreenItem()
+    #endregion
+
+    #region Public Methods
+    public void OnClickScreenItem()
     {
-        // Deselect the previously selected ScreenItem if it exists
         if (currentlySelectedScreenItem != null && currentlySelectedScreenItem != this)
         {
             currentlySelectedScreenItem.Deselect();
         }
 
-        // Select this ScreenItem
         Select();
 
-        // Call the ScreenShare_Child method
-        ScreenShare_Child screenShare_Child = FindAnyObjectByType<ScreenShare_Child>();
-        screenShare_Child.OnStartShareBtnClicked(windowId);
+        ScreenShareClassroom screenShareClassroom = FindObjectOfType<ScreenShareClassroom>();
+        if (screenShareClassroom)
+        {
+            screenShareClassroom.OnStartShareBtnClicked(windowId);
+        }
     }
 
     public void UpdateScreenItemTitle(string windowName)
@@ -51,6 +55,9 @@ public class ScreenItem : MonoBehaviour
         this.screenImage.texture = texture;
     }
 
+    #endregion
+
+    #region Private Methods
     private void Select()
     {
         outer.SetActive(true);
@@ -65,4 +72,6 @@ public class ScreenItem : MonoBehaviour
             currentlySelectedScreenItem = null;
         }
     }
+
+    #endregion
 }
