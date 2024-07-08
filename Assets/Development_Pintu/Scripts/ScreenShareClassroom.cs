@@ -1,4 +1,5 @@
 using Agora.Rtc;
+using Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ public class ScreenShareClassroom : MonoBehaviour
         stopPublishButton.onClick.AddListener(OnUnplishButtonClick);
         BaseScreenAudioHandler.OnJoinAgoraChannel += OnJoinChannel;
         BaseScreenAudioHandler.OnLeaveAgoraChannel += OnLeaveChannel;
+        BaseScreenAudioHandler.OnUserAgoraJoined += OnUserJoined;
     }
 
     private void OnDestroy()
@@ -32,6 +34,7 @@ public class ScreenShareClassroom : MonoBehaviour
         stopPublishButton.onClick. RemoveListener(OnUnplishButtonClick);
         BaseScreenAudioHandler.OnJoinAgoraChannel -= OnJoinChannel;
         BaseScreenAudioHandler.OnLeaveAgoraChannel -= OnLeaveChannel;
+        BaseScreenAudioHandler.OnUserAgoraJoined -= OnUserJoined;
     }
 
     #endregion
@@ -53,6 +56,11 @@ public class ScreenShareClassroom : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void OnUserJoined(uint uid, int elapsed)
+    {
+        MakeVideoView(uid, BaseScreenAudioHandler.Instance.GetChannelName(), VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
     }
 
     private void PrepareScreenCapture()

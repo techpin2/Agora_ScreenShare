@@ -5,13 +5,13 @@ using Agora_RTC_Plugin.API_Example;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
 
 public class BaseScreenAudioHandler : MonoBehaviour
 {
     public static BaseScreenAudioHandler Instance;
     public static Action OnJoinAgoraChannel;
     public static Action OnLeaveAgoraChannel;
+    public static Action<uint, int> OnUserAgoraJoined;
 
     [FormerlySerializedAs("appIdInput")]
     [SerializeField]
@@ -176,7 +176,8 @@ public class BaseScreenAudioHandler : MonoBehaviour
         public override void OnUserJoined(RtcConnection connection, uint uid, int elapsed)
         {
             Debug.Log(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
-            ScreenShare.MakeVideoView(uid, _desktopScreenShare.GetChannelName(), VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
+            OnUserAgoraJoined?.Invoke(uid, elapsed);
+            //ScreenShare.MakeVideoView(uid, _desktopScreenShare.GetChannelName(), VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
         }
 
         public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)
