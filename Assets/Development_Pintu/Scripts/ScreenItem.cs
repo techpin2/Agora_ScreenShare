@@ -29,14 +29,16 @@ public class ScreenItem : MonoBehaviour
     #region Public Methods
     public void OnClickScreenItem()
     {
+        ScreenShareClassroom screenShareClassroom = FindObjectOfType<ScreenShareClassroom>();
+
         if (currentlySelectedScreenItem != null && currentlySelectedScreenItem != this)
         {
             currentlySelectedScreenItem.Deselect();
+            screenShareClassroom.OnUnplishButtonClick();
         }
 
         Select();
 
-        ScreenShareClassroom screenShareClassroom = FindObjectOfType<ScreenShareClassroom>();
         if (screenShareClassroom)
         {
             screenShareClassroom.OnStartShareBtnClicked(windowId);

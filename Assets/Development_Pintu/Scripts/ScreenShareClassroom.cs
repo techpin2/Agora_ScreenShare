@@ -51,7 +51,6 @@ public class ScreenShareClassroom : MonoBehaviour
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
         videoSurface?.DestroyTexture();
-
         foreach (Transform child in screensParent)
         {
             Destroy(child.gameObject);
@@ -152,9 +151,9 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(false);
     }
 
-    private void OnUnplishButtonClick()
+    public void OnUnplishButtonClick()
     {
-        videoSurface.DestroyTexture();  //To Destroy RendererTexture
+        //videoSurface.DestroyTexture();  //To Destroy RendererTexture
 
         ChannelMediaOptions options = new ChannelMediaOptions();
         //options.publishCameraTrack.SetValue(true);
