@@ -9,8 +9,10 @@ public class ScreenShareClassroom : MonoBehaviour
     [SerializeField] private Button stopPublishButton;
     [SerializeField] private Transform screensParent;
     [SerializeField] private ScreenItem screenItemPrefab;
-    [SerializeField] private VideoSurfaceClassroom videoSurface;
+    [SerializeField] private Transform videoSurfaceParent;
 
+    private VideoSurfaceClassroom videoSurface;
+    private GameObject previewGameObject;
     private ScreenCaptureSourceInfo[] _screenCaptureSourceInfos;
     #region Monobehaviour Methods
 
@@ -45,7 +47,7 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(false);
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
-        videoSurface.DestroyTexture();
+        videoSurface?.DestroyTexture();
 
         foreach (Transform child in screensParent)
         {
@@ -99,10 +101,33 @@ public class ScreenShareClassroom : MonoBehaviour
 
     private void MakeVideoView(uint uid, string channelId = "", VIDEO_SOURCE_TYPE videoSourceType = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA)
     {
-        if (ReferenceEquals(videoSurface, null)) return;
+        var videoSurfaceClassroom = MakeImageSurface();
+        videoSurfaceClassroom.SetForUser(uid, channelId, videoSourceType);
+        videoSurfaceClassroom.SetEnable(true);
+    }
 
-        videoSurface.SetForUser(uid, channelId, videoSourceType);
-        videoSurface.SetEnable(true);
+    private VideoSurface MakeImageSurface()
+    {
+        if (previewGameObject != null)
+        {
+            Destroy(previewGameObject);
+        }
+
+        previewGameObject = new GameObject();
+        previewGameObject.name = "123";
+        // to be renderered onto
+        previewGameObject.AddComponent<RawImage>();
+        previewGameObject.transform.SetParent(videoSurfaceParent);
+
+        // set up transform
+        previewGameObject.transform.Rotate(180f, 0.0f, 0.0f);
+        previewGameObject.transform.localPosition = Vector3.zero;
+        previewGameObject.GetComponent<RectTransform>().sizeDelta=new Vector2(1280, 720);
+
+        // configure videoSurface
+        var videoSurface = previewGameObject.AddComponent<VideoSurfaceClassroom>();
+        this.videoSurface = videoSurface; 
+        return videoSurface;
     }
 
     private void OnPublishButtonClick()
@@ -116,6 +141,7 @@ public class ScreenShareClassroom : MonoBehaviour
 
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(true);
+        getCaptureScreenButton.gameObject.SetActive(false);
     }
 
     private void OnUnplishButtonClick()
@@ -130,6 +156,7 @@ public class ScreenShareClassroom : MonoBehaviour
 
         startPublishButton.gameObject.SetActive(true);
         stopPublishButton.gameObject.SetActive(false);
+        getCaptureScreenButton.gameObject.SetActive(true);
     }
 
     #endregion

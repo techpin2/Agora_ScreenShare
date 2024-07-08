@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Agora-RTC-Plugin/API-Example/Examples/Advanced/ScreenShare/ScreenShareScene.unity
-    guid: 808bde60265534ed88253e319faab94a
   - enabled: 1
     path: Assets/Development_Pintu/Scenes/DesktopScreenShare.unity
     guid: d49ea03eaaeaccf478f28498af38eead

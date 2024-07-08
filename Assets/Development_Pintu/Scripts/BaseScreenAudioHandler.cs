@@ -165,8 +165,6 @@ public class BaseScreenAudioHandler : MonoBehaviour
         public override void OnLeaveChannel(RtcConnection connection, RtcStats stats)
         {
             Debug.Log("OnLeaveChannel");
-            ScreenShare.DestroyVideoView(connection.localUid);
-
             OnLeaveAgoraChannel?.Invoke();
         }
 

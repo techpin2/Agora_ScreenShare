@@ -43,7 +43,7 @@ public class VoiceChatClassroom : MonoBehaviour
     private void OnChannelLeave()
     {
         micToggle.gameObject.SetActive(false);
-        micToggle.isOn = false;
+        micToggle.isOn = true;
     }
 
     private void StopPublishAudio()
