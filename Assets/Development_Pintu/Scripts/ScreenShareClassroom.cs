@@ -54,12 +54,11 @@ public class ScreenShareClassroom : MonoBehaviour
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
 
-        VideoSurfaceClassroom videoSurfaceClassroom = videoSurfaces.Find(x => x.name == localUid.ToString());
-        if (videoSurfaceClassroom)
+        foreach (var surface in videoSurfaces)
         {
-            Destroy(videoSurfaceClassroom.gameObject);
-            videoSurfaces.Remove(videoSurfaceClassroom);
+            Destroy(surface.gameObject);            
         }
+        videoSurfaces.Clear();
 
         foreach (Transform child in screensParent)
         {
