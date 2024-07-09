@@ -12,7 +12,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
     public static Action OnJoinAgoraChannel;
     public static Action OnLeaveAgoraChannel;
     public static Action<uint, int> OnUserAgoraJoined;
-    public static Action OnUserAgoraOffline;
+    public static Action<uint> OnUserAgoraOffline;
 
     [FormerlySerializedAs("appIdInput")]
     [SerializeField]
@@ -183,7 +183,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
         public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)
         {
             Debug.Log(string.Format("OnUserOffLine uid: ${0}, reason: ${1}", uid, (int)reason));
-            OnUserAgoraOffline?.Invoke();
+            OnUserAgoraOffline?.Invoke(uid);
         }
     }
 

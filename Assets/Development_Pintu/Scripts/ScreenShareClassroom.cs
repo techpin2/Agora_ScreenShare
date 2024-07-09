@@ -52,8 +52,8 @@ public class ScreenShareClassroom : MonoBehaviour
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
 
-        //DestroyPreviewGameObject();
-        videoSurface?.DestroyTexture();
+        DestroyPreviewGameObject(0);
+        //videoSurface?.DestroyTexture();
 
         foreach (Transform child in screensParent)
         {
@@ -61,9 +61,9 @@ public class ScreenShareClassroom : MonoBehaviour
         }
     }
 
-    private void OnUserOffline()
+    private void OnUserOffline(uint uid)
     {
-        DestroyPreviewGameObject();
+        DestroyPreviewGameObject(uid);
     }
 
     private void OnUserJoined(uint uid, int elapsed)
@@ -117,17 +117,30 @@ public class ScreenShareClassroom : MonoBehaviour
 
     private void MakeVideoView(uint uid, string channelId = "", VIDEO_SOURCE_TYPE videoSourceType = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA)
     {
-        var videoSurfaceClassroom = MakeImageSurface();
+        var go = GameObject.Find(uid.ToString());
+        if (!ReferenceEquals(go, null))
+        {
+            return; // reuse
+        }
+
+        var videoSurfaceClassroom = MakeImageSurface(uid.ToString());
+        if (ReferenceEquals(videoSurfaceClassroom, null)) return;
         videoSurfaceClassroom.SetForUser(uid, channelId, videoSourceType);
         videoSurfaceClassroom.SetEnable(true);
     }
 
-    private VideoSurface MakeImageSurface()
+    private VideoSurface MakeImageSurface(string goName)
     {
-        DestroyPreviewGameObject();
+        //DestroyPreviewGameObject(uint.Parse(goName));
 
         previewGameObject = new GameObject();
-        previewGameObject.name = "123";
+
+        if (previewGameObject == null)
+        {
+            return null;
+        }
+        previewGameObject.name = goName;
+
         // to be renderered onto
         previewGameObject.AddComponent<RawImage>();
         previewGameObject.transform.SetParent(videoSurfaceParent);
@@ -172,12 +185,18 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(true);
     }
 
-    private void DestroyPreviewGameObject()
+    private void DestroyPreviewGameObject(uint uid)
     {
-        if (previewGameObject != null)
+        var go = GameObject.Find(uid.ToString());
+        if (!ReferenceEquals(go, null))
         {
-            Destroy(previewGameObject);
+            Destroy(go);
         }
+
+        //if (previewGameObject != null)
+        //{
+        //    Destroy(previewGameObject);
+        //}
     }
 
     #endregion
