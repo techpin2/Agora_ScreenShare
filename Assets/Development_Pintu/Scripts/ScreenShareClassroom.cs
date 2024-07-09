@@ -12,7 +12,6 @@ public class ScreenShareClassroom : MonoBehaviour
     [SerializeField] private ScreenItem screenItemPrefab;
     [SerializeField] private Transform videoSurfaceParent;
     [SerializeField] private List<VideoSurfaceClassroom> videoSurfaces;
-    private VIDEO_SOURCE_TYPE videoSourceType;
 
     private VideoSurfaceClassroom videoSurface;
     private GameObject previewGameObject;
@@ -49,18 +48,18 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(true);
     }
 
-    private void OnLeaveChannel()
+    private void OnLeaveChannel(uint localUid)
     {
         getCaptureScreenButton.gameObject.SetActive(false);
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
 
-        foreach (var item in videoSurfaces)
+        VideoSurfaceClassroom videoSurfaceClassroom = videoSurfaces.Find(x => x.name == localUid.ToString());
+        if (videoSurfaceClassroom)
         {
-            Destroy(item.gameObject);
+            Destroy(videoSurfaceClassroom.gameObject);
+            videoSurfaces.Remove(videoSurfaceClassroom);
         }
-
-        videoSurfaces.Clear();
 
         foreach (Transform child in screensParent)
         {
@@ -75,6 +74,7 @@ public class ScreenShareClassroom : MonoBehaviour
 
     private void OnUserJoined(uint uid, int elapsed)
     {
+        Debug.Log("Remote UserID" + uid);
         MakeVideoView(uid, BaseScreenAudioHandler.Instance.GetChannelName(), VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
     }
 

@@ -10,7 +10,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
 {
     public static BaseScreenAudioHandler Instance;
     public static Action OnJoinAgoraChannel;
-    public static Action OnLeaveAgoraChannel;
+    public static Action<uint> OnLeaveAgoraChannel;
     public static Action<uint, int> OnUserAgoraJoined;
     public static Action<uint> OnUserAgoraOffline;
 
@@ -165,8 +165,8 @@ public class BaseScreenAudioHandler : MonoBehaviour
 
         public override void OnLeaveChannel(RtcConnection connection, RtcStats stats)
         {
-            Debug.Log("OnLeaveChannel");
-            OnLeaveAgoraChannel?.Invoke();
+            Debug.Log("OnLeaveChannel"+connection.localUid);
+            OnLeaveAgoraChannel?.Invoke(connection.localUid);
         }
 
         public override void OnClientRoleChanged(RtcConnection connection, CLIENT_ROLE_TYPE oldRole, CLIENT_ROLE_TYPE newRole, ClientRoleOptions newRoleOptions)
