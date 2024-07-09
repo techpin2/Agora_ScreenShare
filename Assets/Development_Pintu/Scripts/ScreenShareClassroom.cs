@@ -1,5 +1,4 @@
 using Agora.Rtc;
-using Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,16 +24,18 @@ public class ScreenShareClassroom : MonoBehaviour
         BaseScreenAudioHandler.OnJoinAgoraChannel += OnJoinChannel;
         BaseScreenAudioHandler.OnLeaveAgoraChannel += OnLeaveChannel;
         BaseScreenAudioHandler.OnUserAgoraJoined += OnUserJoined;
+        BaseScreenAudioHandler.OnUserAgoraOffline += OnUserOffline;
     }
 
     private void OnDestroy()
     {
         getCaptureScreenButton.onClick.RemoveListener(PrepareScreenCapture);
         startPublishButton.onClick.RemoveListener(OnPublishButtonClick);
-        stopPublishButton.onClick. RemoveListener(OnUnplishButtonClick);
+        stopPublishButton.onClick.RemoveListener(OnUnplishButtonClick);
         BaseScreenAudioHandler.OnJoinAgoraChannel -= OnJoinChannel;
         BaseScreenAudioHandler.OnLeaveAgoraChannel -= OnLeaveChannel;
         BaseScreenAudioHandler.OnUserAgoraJoined -= OnUserJoined;
+        BaseScreenAudioHandler.OnUserAgoraOffline -= OnUserOffline;
     }
 
     #endregion
@@ -50,11 +51,19 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(false);
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
+
+        //DestroyPreviewGameObject();
         videoSurface?.DestroyTexture();
+
         foreach (Transform child in screensParent)
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void OnUserOffline()
+    {
+        DestroyPreviewGameObject();
     }
 
     private void OnUserJoined(uint uid, int elapsed)
@@ -115,10 +124,7 @@ public class ScreenShareClassroom : MonoBehaviour
 
     private VideoSurface MakeImageSurface()
     {
-        if (previewGameObject != null)
-        {
-            Destroy(previewGameObject);
-        }
+        DestroyPreviewGameObject();
 
         previewGameObject = new GameObject();
         previewGameObject.name = "123";
@@ -164,6 +170,14 @@ public class ScreenShareClassroom : MonoBehaviour
         startPublishButton.gameObject.SetActive(true);
         stopPublishButton.gameObject.SetActive(false);
         getCaptureScreenButton.gameObject.SetActive(true);
+    }
+
+    private void DestroyPreviewGameObject()
+    {
+        if (previewGameObject != null)
+        {
+            Destroy(previewGameObject);
+        }
     }
 
     #endregion
