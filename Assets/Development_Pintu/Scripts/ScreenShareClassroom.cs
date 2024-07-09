@@ -1,4 +1,5 @@
 using Agora.Rtc;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ public class ScreenShareClassroom : MonoBehaviour
     [SerializeField] private Transform screensParent;
     [SerializeField] private ScreenItem screenItemPrefab;
     [SerializeField] private Transform videoSurfaceParent;
+    [SerializeField] private List<VideoSurfaceClassroom> videoSurfaces;
+    private VIDEO_SOURCE_TYPE videoSourceType;
 
     private VideoSurfaceClassroom videoSurface;
     private GameObject previewGameObject;
@@ -51,6 +54,15 @@ public class ScreenShareClassroom : MonoBehaviour
         getCaptureScreenButton.gameObject.SetActive(false);
         startPublishButton.gameObject.SetActive(false);
         stopPublishButton.gameObject.SetActive(false);
+
+        foreach (var item in videoSurfaces)
+        {
+            if (item.GetVideoSurfaceType() == VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE)
+            {
+                Destroy(item.gameObject);
+                videoSurfaces.Remove(item);
+            }
+        }
 
         DestroyPreviewGameObject(0);
 
@@ -124,11 +136,14 @@ public class ScreenShareClassroom : MonoBehaviour
 
         var videoSurfaceClassroom = MakeImageSurface(uid.ToString());
         if (ReferenceEquals(videoSurfaceClassroom, null)) return;
+
+        videoSurfaces.Add(videoSurfaceClassroom);
+
         videoSurfaceClassroom.SetForUser(uid, channelId, videoSourceType);
         videoSurfaceClassroom.SetEnable(true);
     }
 
-    private VideoSurface MakeImageSurface(string goName)
+    private VideoSurfaceClassroom MakeImageSurface(string goName)
     {
         //DestroyPreviewGameObject(uint.Parse(goName));
 
@@ -185,18 +200,12 @@ public class ScreenShareClassroom : MonoBehaviour
     }
 
     private void DestroyPreviewGameObject(uint uid)
-    {
+    { 
         var go = GameObject.Find(uid.ToString());
         if (!ReferenceEquals(go, null))
         {
-            videoSurface?.DestroyTexture();
             Destroy(go);
         }
-
-        //if (previewGameObject != null)
-        //{
-        //    Destroy(previewGameObject);
-        //}
     }
 
     #endregion

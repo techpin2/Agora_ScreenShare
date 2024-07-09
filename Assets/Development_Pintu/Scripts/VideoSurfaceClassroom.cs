@@ -6,4 +6,9 @@ public class VideoSurfaceClassroom : VideoSurface
     {
         Enable = false;
     }
+
+    public VIDEO_SOURCE_TYPE GetVideoSurfaceType()
+    {
+        return SourceType;
+    }
 }
