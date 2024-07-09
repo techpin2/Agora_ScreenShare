@@ -57,14 +57,10 @@ public class ScreenShareClassroom : MonoBehaviour
 
         foreach (var item in videoSurfaces)
         {
-            if (item.GetVideoSurfaceType() == VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE)
-            {
-                Destroy(item.gameObject);
-                videoSurfaces.Remove(item);
-            }
+            Destroy(item.gameObject);
         }
 
-        DestroyPreviewGameObject(0);
+        videoSurfaces.Clear();
 
         foreach (Transform child in screensParent)
         {
