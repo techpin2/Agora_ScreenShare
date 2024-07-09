@@ -69,7 +69,12 @@ public class ScreenShareClassroom : MonoBehaviour
 
     private void OnUserOffline(uint uid)
     {
-        DestroyPreviewGameObject(uid);
+        VideoSurfaceClassroom videoSurfaceClassroom = videoSurfaces.Find(x => x.name == uid.ToString());
+        if (videoSurfaceClassroom)
+        {
+            Destroy(videoSurfaceClassroom.gameObject);
+            videoSurfaces.Remove(videoSurfaceClassroom);
+        }
     }
 
     private void OnUserJoined(uint uid, int elapsed)
