@@ -53,7 +53,6 @@ public class ScreenShareClassroom : MonoBehaviour
         stopPublishButton.gameObject.SetActive(false);
 
         DestroyPreviewGameObject(0);
-        //videoSurface?.DestroyTexture();
 
         foreach (Transform child in screensParent)
         {
@@ -190,6 +189,7 @@ public class ScreenShareClassroom : MonoBehaviour
         var go = GameObject.Find(uid.ToString());
         if (!ReferenceEquals(go, null))
         {
+            videoSurface?.DestroyTexture();
             Destroy(go);
         }
 
