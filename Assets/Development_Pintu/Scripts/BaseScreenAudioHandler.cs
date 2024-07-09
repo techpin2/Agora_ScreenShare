@@ -115,6 +115,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
     private void LeaveChannel()
     {
         UpdateJoinLeaveButtons(false);
+        RtcEngine.StopScreenCapture();
         RtcEngine.LeaveChannel();
         Debug.Log("Leave Chanel ");
     }

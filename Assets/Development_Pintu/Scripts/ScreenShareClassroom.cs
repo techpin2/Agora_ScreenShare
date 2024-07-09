@@ -129,6 +129,7 @@ public class ScreenShareClassroom : MonoBehaviour
     private void MakeVideoView(uint uid, string channelId = "", VIDEO_SOURCE_TYPE videoSourceType = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA)
     {
         var go = GameObject.Find(uid.ToString());
+
         if (!ReferenceEquals(go, null))
         {
             return; // reuse
@@ -141,6 +142,11 @@ public class ScreenShareClassroom : MonoBehaviour
 
         videoSurfaceClassroom.SetForUser(uid, channelId, videoSourceType);
         videoSurfaceClassroom.SetEnable(true);
+
+        if(videoSurfaceClassroom.GetVideoSurfaceType()==VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE)
+        {
+            videoSurfaceClassroom.gameObject.SetActive(false);
+        }
     }
 
     private VideoSurfaceClassroom MakeImageSurface(string goName)
