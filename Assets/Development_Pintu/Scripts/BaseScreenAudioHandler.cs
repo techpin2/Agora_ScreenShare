@@ -12,6 +12,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
     public static Action OnJoinAgoraChannel;
     public static Action OnLeaveAgoraChannel;
     public static Action<uint, int> OnUserAgoraJoined;
+    public static Action OnUserAgoraOffline;
 
     [FormerlySerializedAs("appIdInput")]
     [SerializeField]
@@ -177,14 +178,12 @@ public class BaseScreenAudioHandler : MonoBehaviour
         {
             Debug.Log(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
             OnUserAgoraJoined?.Invoke(uid, elapsed);
-            //ScreenShare.MakeVideoView(uid, _desktopScreenShare.GetChannelName(), VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
         }
 
         public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)
         {
-            Debug.Log(string.Format("OnUserOffLine uid: ${0}, reason: ${1}", uid,
-                (int)reason));
-            ScreenShare.DestroyVideoView(uid);
+            Debug.Log(string.Format("OnUserOffLine uid: ${0}, reason: ${1}", uid, (int)reason));
+            OnUserAgoraOffline?.Invoke();
         }
     }
 
