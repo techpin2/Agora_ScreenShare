@@ -154,7 +154,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
             Debug.Log(string.Format("sdk version: ${0}",_desktopScreenShare.RtcEngine.GetVersion(ref build)));
             Debug.Log( string.Format("OnJoinChannelSuccess channelName: {0}, uid: {1}, elapsed: {2}",connection.channelId, connection.localUid, elapsed));
 
-            OnJoinAgoraChannel?.Invoke();
+            OnJoinAgoraChannel?.Invoke(connection.localUid);
         }
 
         public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
