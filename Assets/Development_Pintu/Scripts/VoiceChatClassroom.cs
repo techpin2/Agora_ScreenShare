@@ -57,6 +57,7 @@ public class VoiceChatClassroom : MonoBehaviour
     {
         var options = new ChannelMediaOptions();
         options.publishMicrophoneTrack.SetValue(false);
+        options.publishScreenCaptureAudio.SetValue(true);
         var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);        
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
@@ -64,7 +65,8 @@ public class VoiceChatClassroom : MonoBehaviour
     private void StartPublishAudio()
     {
         var options = new ChannelMediaOptions();
-        options.publishMicrophoneTrack.SetValue(true);
+        options.publishMicrophoneTrack.SetValue(true); 
+        options.publishScreenCaptureAudio.SetValue(true);
         var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
