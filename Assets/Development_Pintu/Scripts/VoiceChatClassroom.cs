@@ -60,7 +60,9 @@ public class VoiceChatClassroom : MonoBehaviour
         //options.publishScreenCaptureAudio.SetValue(true);
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);  
         
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
+
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);
 
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
@@ -73,7 +75,9 @@ public class VoiceChatClassroom : MonoBehaviour
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         //Debug.Log("UpdateChannelMediaOptions: " + nRet);
 
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
+
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);
     }
 
     #endregion

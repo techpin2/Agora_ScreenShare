@@ -109,7 +109,11 @@ public class BaseScreenAudioHandler : MonoBehaviour
     private void JoinChannel()
     {
         UpdateJoinLeaveButtons(true);
-        var ret = RtcEngine.JoinChannel(_token, _channelName);
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        // Automatically subscribe to all audio streams.
+        options.autoSubscribeAudio.SetValue(true);
+
+        var ret = RtcEngine.JoinChannel(_token, _channelName, 0 , options);
         Debug.Log("JoinChannel returns: " + ret);
     }
 
@@ -118,6 +122,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
         UpdateJoinLeaveButtons(false);
         RtcEngine.StopScreenCapture();
         RtcEngine.LeaveChannel();
+        RtcEngine.DisableAudio();
         Debug.Log("Leave Chanel ");
     }
 
