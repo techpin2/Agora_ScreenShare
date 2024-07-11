@@ -1,4 +1,5 @@
 using Agora.Rtc;
+using Agora_RTC_Plugin.API_Example;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,12 @@ public class VoiceChatClassroom : MonoBehaviour
         BaseScreenAudioHandler.OnJoinAgoraChannel -= OnChannelJoin;
         BaseScreenAudioHandler.OnLeaveAgoraChannel -= OnChannelLeave;
     }
+
+    private void Update()
+    {
+        PermissionHelper.RequestMicrophontPermission();
+    }
+
     #endregion
 
     #region Private Methods
@@ -50,7 +57,7 @@ public class VoiceChatClassroom : MonoBehaviour
     {
         var options = new ChannelMediaOptions();
         options.publishMicrophoneTrack.SetValue(false);
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);        
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
 

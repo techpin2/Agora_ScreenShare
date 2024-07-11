@@ -345,7 +345,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ScreenShare
             if (mesh != null)
             {
                 Debug.LogWarning("VideoSureface update shader");
-                mesh.material = new Material(Shader.Find("Unlit/Texture"));
+                mesh.material = new Material(Shader.Find("Unlit/ClassroomScreenShareShader"));
             }
             // set up transform
             go.transform.Rotate(-90.0f, 0.0f, 0.0f);
