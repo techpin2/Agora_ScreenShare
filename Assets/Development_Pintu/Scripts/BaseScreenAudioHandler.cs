@@ -9,7 +9,7 @@ using System;
 public class BaseScreenAudioHandler : MonoBehaviour
 {
     public static BaseScreenAudioHandler Instance;
-    public static Action OnJoinAgoraChannel;
+    public static Action<uint> OnJoinAgoraChannel;
     public static Action<uint> OnLeaveAgoraChannel;
     public static Action<uint, int> OnUserAgoraJoined;
     public static Action<uint> OnUserAgoraOffline;

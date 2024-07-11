@@ -51,7 +51,7 @@ public class ScreenShareClassroom : MonoBehaviour
     #endregion
 
     #region Private Methods
-    private void OnJoinChannel()
+    private void OnJoinChannel(uint uid)
     {
         getCaptureScreenButton.gameObject.SetActive(true);
     }

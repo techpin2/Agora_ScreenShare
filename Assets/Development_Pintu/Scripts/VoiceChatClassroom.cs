@@ -7,6 +7,8 @@ public class VoiceChatClassroom : MonoBehaviour
 {
     [SerializeField] private Toggle micToggle;
 
+    private uint localUID;
+
     #region Monobehaviour Method
     private void Awake()
     {
@@ -41,8 +43,9 @@ public class VoiceChatClassroom : MonoBehaviour
             StartPublishAudio();
         }
     }
-    private void OnChannelJoin()
+    private void OnChannelJoin(uint uid)
     {
+        localUID = uid;
         micToggle.gameObject.SetActive(true);
         StopPublishAudio();
     }
@@ -65,8 +68,10 @@ public class VoiceChatClassroom : MonoBehaviour
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
 
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);  
-        Debug.Log("UpdateChannelMediaOptions: " + nRet);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);
+
+        BaseScreenAudioHandler.Instance.GetRTCEngine.AdjustUserPlaybackSignalVolume(localUID, 0);
+        //Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
 
     private void StartPublishAudio()
@@ -82,7 +87,11 @@ public class VoiceChatClassroom : MonoBehaviour
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
         
         var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);
-        Debug.Log("UpdateChannelMediaOptions: " + nRet);
+
+
+        //Debug.Log("UpdateChannelMediaOptions: " + nRet);
+        
+        BaseScreenAudioHandler.Instance.GetRTCEngine.AdjustUserPlaybackSignalVolume(localUID, 100);
     }
 
     #endregion
