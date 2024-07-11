@@ -211,7 +211,7 @@ public class ScreenShareClassroom : MonoBehaviour
         //videoSurface.DestroyTexture();  //To Destroy RendererTexture
 
         ChannelMediaOptions options = new ChannelMediaOptions();
-        //options.publishCameraTrack.SetValue(true);
+        options.publishCameraTrack.SetValue(true);
         options.publishScreenTrack.SetValue(false);
         var ret = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         Debug.Log("UpdateChannelMediaOptions returns: " + ret);

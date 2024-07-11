@@ -63,7 +63,8 @@ public class VoiceChatClassroom : MonoBehaviour
         //options.publishScreenTrack.SetValue(false);
 
         var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
-        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);  
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
 
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
@@ -74,13 +75,13 @@ public class VoiceChatClassroom : MonoBehaviour
         options.publishMicrophoneTrack.SetValue(true);
         options.publishScreenCaptureAudio.SetValue(true);
 
-        //options.publishCameraTrack.SetValue(false);
         options.publishScreenTrack.SetValue(true);
+        //options.publishCameraTrack.SetValue(false);
 
         var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
-        Debug.Log("UpdateChannelMediaOptions: " + nRet);
-
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
+        Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
 
     #endregion
