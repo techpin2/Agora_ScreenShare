@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Agora.Rtc;
 
 public class ScreenItem : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ScreenItem : MonoBehaviour
     [SerializeField] private GameObject outer;
     private Button button;
     private string windowId;
+    private ScreenCaptureSourceType screenCaptureSourceType;
 
     #region Monobehaviour Methods
     private void Awake()
@@ -41,15 +43,16 @@ public class ScreenItem : MonoBehaviour
 
         if (screenShareClassroom)
         {
-            screenShareClassroom.OnStartShareBtnClicked(windowId);
+            screenShareClassroom.OnStartShareBtnClicked(windowId , screenCaptureSourceType);
         }
     }
 
-    public void UpdateScreenItemTitle(string windowName)
+    public void UpdateScreenItemTitle(string windowName ,ScreenCaptureSourceType screenCaptureSourceType)
     {
         string[] screenName = windowName.Split('|');
         this.windowName.text = screenName[0];
         this.windowId = screenName[screenName.Length - 1];
+        this.screenCaptureSourceType = screenCaptureSourceType;
     }
 
     public void UpdateScreenItemThumbnail(Texture texture)

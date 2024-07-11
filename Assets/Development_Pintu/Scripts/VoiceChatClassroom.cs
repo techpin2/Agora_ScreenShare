@@ -55,25 +55,32 @@ public class VoiceChatClassroom : MonoBehaviour
 
     private void StopPublishAudio()
     {
-        //var options = new ChannelMediaOptions();
-        //options.publishMicrophoneTrack.SetValue(false);
-        //options.publishScreenCaptureAudio.SetValue(true);
-        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);  
-        
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
+        var options = new ChannelMediaOptions();
+        options.publishMicrophoneTrack.SetValue(false);
+        options.publishScreenCaptureAudio.SetValue(true);
+
+        options.publishCameraTrack.SetValue(true);
+        //options.publishScreenTrack.SetValue(false);
+
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);
 
         Debug.Log("UpdateChannelMediaOptions: " + nRet);
     }
 
     private void StartPublishAudio()
     {
-        //var options = new ChannelMediaOptions();
-        //options.publishMicrophoneTrack.SetValue(true); 
-        //options.publishScreenCaptureAudio.SetValue(true);
-        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
-        //Debug.Log("UpdateChannelMediaOptions: " + nRet);
+        var options = new ChannelMediaOptions();
+        options.publishMicrophoneTrack.SetValue(true);
+        options.publishScreenCaptureAudio.SetValue(true);
 
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
+        //options.publishCameraTrack.SetValue(false);
+        options.publishScreenTrack.SetValue(true);
+
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
+        Debug.Log("UpdateChannelMediaOptions: " + nRet);
+
+        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);
     }
 
     #endregion

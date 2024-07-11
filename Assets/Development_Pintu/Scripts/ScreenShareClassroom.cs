@@ -1,4 +1,5 @@
 using Agora.Rtc;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,9 @@ public class ScreenShareClassroom : MonoBehaviour
     [SerializeField] private Button getCaptureScreenButton;
     [SerializeField] private Button startPublishButton;
     [SerializeField] private Button stopPublishButton;
+    [SerializeField] private Toggle changeScreenTypeToggle;
     [SerializeField] private Transform screensParent;
+    [SerializeField] private Transform screensParentEntire;
     [SerializeField] private ScreenItem screenItemPrefab;
     [SerializeField] private Transform videoSurfaceParent;
     [SerializeField] private List<VideoSurfaceClassroom> videoSurfaces;
@@ -27,6 +30,8 @@ public class ScreenShareClassroom : MonoBehaviour
         BaseScreenAudioHandler.OnLeaveAgoraChannel += OnLeaveChannel;
         BaseScreenAudioHandler.OnUserAgoraJoined += OnUserJoined;
         BaseScreenAudioHandler.OnUserAgoraOffline += OnUserOffline;
+
+        changeScreenTypeToggle.onValueChanged.AddListener(OnToggleChanged);
     }
 
     private void OnDestroy()
@@ -38,6 +43,9 @@ public class ScreenShareClassroom : MonoBehaviour
         BaseScreenAudioHandler.OnLeaveAgoraChannel -= OnLeaveChannel;
         BaseScreenAudioHandler.OnUserAgoraJoined -= OnUserJoined;
         BaseScreenAudioHandler.OnUserAgoraOffline -= OnUserOffline;
+
+        changeScreenTypeToggle.onValueChanged.RemoveListener(OnToggleChanged);
+
     }
 
     #endregion
@@ -105,7 +113,15 @@ public class ScreenShareClassroom : MonoBehaviour
             {
                 ScreenItem screens = Instantiate(screenItemPrefab, screensParent);
                 OnShowThumbButtonClicked(item, screens);
-                screens.UpdateScreenItemTitle(string.Format("{0}|{1}", item.sourceTitle, item.sourceId));
+                screens.UpdateScreenItemTitle(string.Format("{0}|{1}", item.sourceTitle, item.sourceId), ScreenCaptureSourceType.ScreenCaptureSourceType_Window);
+            }
+
+            if (item.type == ScreenCaptureSourceType.ScreenCaptureSourceType_Screen)
+            {
+                ScreenItem screens = Instantiate(screenItemPrefab, screensParentEntire);
+                OnShowThumbButtonClicked(item, screens);
+                screens.UpdateScreenItemTitle(string.Format("{0}|{1}", item.sourceTitle, item.sourceId),
+                    ScreenCaptureSourceType.ScreenCaptureSourceType_Screen);
             }
         }
     }
@@ -179,7 +195,7 @@ public class ScreenShareClassroom : MonoBehaviour
     private void OnPublishButtonClick()
     {
         ChannelMediaOptions options = new ChannelMediaOptions();
-        //options.publishCameraTrack.SetValue(false);
+        options.publishCameraTrack.SetValue(false);
         options.publishScreenTrack.SetValue(true);
 
         var ret = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
@@ -214,16 +230,39 @@ public class ScreenShareClassroom : MonoBehaviour
         }
     }
 
+    private void OnToggleChanged(bool isOn)
+    {
+        if (isOn)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+
     #endregion
 
     #region Public Methods
-    public void OnStartShareBtnClicked(string windowId)
+    public void OnStartShareBtnClicked(string windowId , ScreenCaptureSourceType screenCaptureSourceType)
     {
         if (BaseScreenAudioHandler.Instance.GetRTCEngine == null) return;
         BaseScreenAudioHandler.Instance.GetRTCEngine.StopScreenCapture();
 
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.StartScreenCaptureByWindowId(long.Parse(windowId), default(Rectangle), default(ScreenCaptureParameters));
-        Debug.Log("StartScreenCaptureByWindowId:" + nRet);
+        if (screenCaptureSourceType == ScreenCaptureSourceType.ScreenCaptureSourceType_Window)
+        {
+            var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.StartScreenCaptureByWindowId(long.Parse(windowId), default(Rectangle), default(ScreenCaptureParameters));
+            Debug.Log("StartScreenCaptureByWindowId:" + nRet);
+        }
+
+        if (screenCaptureSourceType == ScreenCaptureSourceType.ScreenCaptureSourceType_Screen)
+        {
+            var nRet_EntireScreen = BaseScreenAudioHandler.Instance.GetRTCEngine.StartScreenCaptureByDisplayId(uint.Parse(windowId), default(Rectangle),
+                    new ScreenCaptureParameters { captureMouseCursor = true, frameRate = 30 });
+            Debug.Log("StartScreenCaptureByDisplayId:" + nRet_EntireScreen);
+        }
 
         startPublishButton.gameObject.SetActive(true);
         stopPublishButton.gameObject.SetActive(false);
