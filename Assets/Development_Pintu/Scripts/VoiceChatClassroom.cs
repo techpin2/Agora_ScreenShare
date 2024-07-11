@@ -58,14 +58,14 @@ public class VoiceChatClassroom : MonoBehaviour
 
     private void StopPublishAudio()
     {
-        //var options = new ChannelMediaOptions();
-        //options.publishMicrophoneTrack.SetValue(false);
+        var options = new ChannelMediaOptions();
+        options.publishMicrophoneTrack.SetValue(false);
         //options.publishScreenCaptureAudio.SetValue(true);
 
         //options.publishCameraTrack.SetValue(true);
         ////options.publishScreenTrack.SetValue(false);
 
-        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(false);
 
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(true);
@@ -76,19 +76,16 @@ public class VoiceChatClassroom : MonoBehaviour
 
     private void StartPublishAudio()
     {
-        //var options = new ChannelMediaOptions();
-        //options.publishMicrophoneTrack.SetValue(true);
+        var options = new ChannelMediaOptions();
+        options.publishMicrophoneTrack.SetValue(true);
         //options.publishScreenCaptureAudio.SetValue(true);
 
         //options.publishScreenTrack.SetValue(true);
         ////options.publishCameraTrack.SetValue(false);
 
-        //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
+        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.UpdateChannelMediaOptions(options);
         //var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.EnableLocalAudio(true);
         
-        var nRet = BaseScreenAudioHandler.Instance.GetRTCEngine.MuteLocalAudioStream(false);
-
-
         //Debug.Log("UpdateChannelMediaOptions: " + nRet);
         
         BaseScreenAudioHandler.Instance.GetRTCEngine.AdjustUserPlaybackSignalVolume(localUID, 100);
