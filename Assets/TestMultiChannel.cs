@@ -19,10 +19,10 @@ public class TestMultiChannel : MonoBehaviour
 
     private uint _uid1 = 123;
 
-    public void StartAudioChannel()
+    private void Start()
     {
         InitEngine();
-        //JoinChannel1();
+        JoinChannel1();
     }
 
     private void Update()
@@ -54,8 +54,8 @@ public class TestMultiChannel : MonoBehaviour
 
     public void MicToggle()
     {
-        JoinChannel1();
-        //RtcEngine.AdjustUserPlaybackSignalVolume(_uid1, 100);
+        //JoinChannel1();
+        RtcEngine.AdjustUserPlaybackSignalVolume(_uid1, 0);
     }
 
     #region -- Agora Event ---
