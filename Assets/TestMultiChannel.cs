@@ -23,6 +23,7 @@ public class TestMultiChannel : MonoBehaviour
     {
         InitEngine();
         JoinChannel1();
+        SetBasicConfiguration();
     }
 
     private void Update()
@@ -41,6 +42,14 @@ public class TestMultiChannel : MonoBehaviour
         RtcEngine.Initialize(context);
         RtcEngine.InitEventHandler(handler);
         RtcEngine.EnableAudio();
+    }
+
+    private void SetBasicConfiguration()
+    {
+        RtcEngine.EnableAudio();
+        RtcEngine.EnableVideo();
+        //RtcEngine.SetChannelProfile(CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION);
+        RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
     }
 
     private void JoinChannel1()

@@ -95,7 +95,7 @@ public class BaseScreenAudioHandler : MonoBehaviour
     {
         RtcEngine.EnableAudio();
         RtcEngine.EnableVideo();
-        RtcEngine.SetChannelProfile(CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION);
+        //RtcEngine.SetChannelProfile(CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION);
         RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
     }
 
