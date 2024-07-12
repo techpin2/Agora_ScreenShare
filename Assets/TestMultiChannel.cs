@@ -22,7 +22,7 @@ public class TestMultiChannel : MonoBehaviour
     public void StartAudioChannel()
     {
         InitEngine();
-        JoinChannel1();
+        //JoinChannel1();
     }
 
     private void Update()
@@ -50,6 +50,12 @@ public class TestMultiChannel : MonoBehaviour
         channelMediaOptions.publishMicrophoneTrack.SetValue(true);
         channelMediaOptions.clientRoleType.SetValue(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
         RtcEngine.JoinChannelEx("", new RtcConnection(_channelName, _uid1), channelMediaOptions);       
+    }
+
+    public void MicToggle()
+    {
+        JoinChannel1();
+        //RtcEngine.AdjustUserPlaybackSignalVolume(_uid1, 100);
     }
 
     #region -- Agora Event ---
